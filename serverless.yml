@@ -1,5 +1,4 @@
-service: email-service
-frameworkVersion: '3'
+service: hackathon-service
 
 provider:
   name: aws
@@ -24,16 +23,35 @@ functions:
     role: LambdaRole
     events:
       - http:
-          path: transaction
-          method: get
+          path: transaction/fetch
+          method: post
           cors: true
 
 resources:
   Resources:
+    DDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: hackathon-third-party
+        AttributeDefinitions:
+          - AttributeName: PK
+            AttributeType: N
+          - AttributeName: SK
+            AttributeType: S
+        KeySchema:
+          - AttributeName: PK
+            KeyType: HASH
+          - AttributeName: SK
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
     LambdaRole:
       Type: AWS::IAM::Role
       Properties:
-        RoleName: email-service-lambda-role
+        RoleName: hackathon-lambda-role
         AssumeRolePolicyDocument:
           Version: '2012-10-17'
           Statement:
@@ -43,7 +61,7 @@ resources:
                   - lambda.amazonaws.com
               Action: sts:AssumeRole
         Policies:
-          - PolicyName: lambda-role-policy
+          - PolicyName: hackathon-role-policy
             PolicyDocument:
               Version: '2012-10-17'
               Statement:

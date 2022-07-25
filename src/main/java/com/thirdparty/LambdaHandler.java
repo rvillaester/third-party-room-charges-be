@@ -21,7 +21,7 @@ public class LambdaHandler implements RequestStreamHandler {
             // method: handler = SpringBootLambdaContainerHandler.getHttpApiV2ProxyHandler(Application.class);
         } catch (ContainerInitializationException e) {
             // if we fail here. We re-throw the exception to force another cold start
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             throw new RuntimeException("Could not initialize Spring Boot application", e);
         }
     }
