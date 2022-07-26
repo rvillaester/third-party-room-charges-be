@@ -1,6 +1,7 @@
 package com.thirdparty;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +20,7 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public com.amazonaws.services.dynamodbv2.document.DynamoDB dynamoDB() {
-        return new com.amazonaws.services.dynamodbv2.document.DynamoDB(AmazonDynamoDBClientBuilder.defaultClient());
+    public DynamoDB dynamoDB() {
+        return new DynamoDB(AmazonDynamoDBClientBuilder.defaultClient());
     }
 }
