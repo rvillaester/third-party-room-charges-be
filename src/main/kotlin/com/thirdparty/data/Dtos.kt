@@ -8,8 +8,7 @@ import java.time.LocalDate
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class GetTransactionResponse(
-        val referenceNo: String
-        // add more fields
+    val transactions: List<Transaction> = emptyList()
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
