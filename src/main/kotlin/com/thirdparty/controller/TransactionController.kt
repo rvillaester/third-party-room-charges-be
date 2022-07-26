@@ -1,27 +1,22 @@
 package com.thirdparty.controller
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.thirdparty.data.CreateTransactionRequest
-import com.thirdparty.service.TransactionService
+import com.thirdparty.data.CreateTransactionResponse
 import com.thirdparty.data.GetTransactionRequest
 import com.thirdparty.data.GetTransactionResponse
+import com.thirdparty.service.TransactionService
 import jakarta.validation.Valid
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/transaction")
 class TransactionController(private val service: TransactionService) {
-
-    @Autowired
-    private lateinit var amazonDynamoDB: AmazonDynamoDB
-
     @PostMapping("create")
-    fun create(@Valid @RequestBody request: CreateTransactionRequest): String? {
-
-        return "Save transaction to Dynamo DB and returns reference number"
+    fun create(@Valid @RequestBody request: CreateTransactionRequest): CreateTransactionResponse? {
+        return service.create(request)
     }
 
     @PostMapping("fetch", consumes = ["application/json"], produces = ["application/json"])

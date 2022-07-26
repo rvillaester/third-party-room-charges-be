@@ -37,3 +37,28 @@ data class CreateTransactionRequest (
     @NotBlank
     val partnerId: String?
 )
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class CreateTransactionResponse(
+    val referenceNo: String
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class Transaction(
+    @NotBlank
+    val detail: Map<String, Double>?,
+    @NotBlank
+    val amount: Double?,
+    @NotBlank
+    val receiptNumber: String?,
+    @NotBlank
+    val customerNumber:  String?,
+    @NotBlank
+    val hotelId: String?,
+    @NotBlank
+    val partnerId: String?,
+    @NotBlank
+    val referenceNo: String
+)
