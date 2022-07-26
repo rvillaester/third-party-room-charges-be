@@ -4,14 +4,12 @@ import com.amazonaws.services.dynamodbv2.document.*
 import com.amazonaws.services.dynamodbv2.document.spec.ScanSpec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 @Component
 class DynamoDBClient {
     @Autowired
-    private lateinit var dynamoDB: com.amazonaws.services.dynamodbv2.document.DynamoDB
+    private lateinit var dynamoDB: DynamoDB
 
     fun create(items: Map<String, String>) {
         val table: Table = dynamoDB.getTable(TABLE_NAME)
@@ -29,24 +27,23 @@ class DynamoDBClient {
         table.putItem(dynamoDBItem)
     }
 
-    /*fun fetch(items: Map<String, String>): List<Map<String, String>> {
-        val transactions: MutableList<MutableMap<String, String>> = MutableList<MutableMap<String, String>>(1)
+    fun fetch(items: Map<String, String>): List<Map<String, String>> {
+        val transactions: MutableList<Map<String, String>> = mutableListOf()
         try {
             val table: Table = dynamoDB.getTable(TABLE_NAME)
 
             val spec = ScanSpec().withNameMap(items)
 
-
-
-            val items: ItemCollection<ScanOutcome> = table.scan(spec)
-            items.forEach { currentItem ->
+            table.scan(spec).forEach { currentItem ->
                 transactions.add(currentItem.asMap() as Map<String, String>)
                 println(currentItem.toString())
             }
         } catch (e: Exception) {
             System.err.println(e.message)
         }
-    }*/
+
+        return transactions
+    }
 
     companion object {
         private const val TABLE_NAME = "hackathon-third-party"
