@@ -29,8 +29,7 @@ fun <T> T.toDDBItem(objectMapper: ObjectMapper, key: String = "pk"): Item {
                     items[key]
             ))
 
-    items
-            .filter { it.key != key && it.value != null }
+    items.filter { it.key != key && it.value != null }
             .forEach { (key, value) ->
                 dynamoDBItem.withString(key, value)
             }
