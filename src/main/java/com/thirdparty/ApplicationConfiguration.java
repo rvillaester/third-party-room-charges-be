@@ -1,5 +1,6 @@
 package com.thirdparty;
 
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +22,8 @@ public class ApplicationConfiguration {
 
     @Bean
     public DynamoDB dynamoDB() {
-        return new DynamoDB(AmazonDynamoDBClientBuilder.defaultClient());
+        return new DynamoDB(AmazonDynamoDBClientBuilder.standard()
+                .withRegion(Regions.AP_SOUTHEAST_2)
+                .build());
     }
 }

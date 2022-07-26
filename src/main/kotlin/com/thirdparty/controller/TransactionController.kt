@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/transaction")
 class TransactionController(private val service: TransactionService) {
     @PostMapping("create")
-    fun create(@Valid @RequestBody request: CreateTransactionRequest): CreateTransactionResponse? {
-        return service.create(request)
+    fun create(@Valid @RequestBody request: CreateTransactionRequest?): CreateTransactionResponse? {
+        return service.create(request!!)
     }
 
     @PostMapping("fetch", consumes = ["application/json"], produces = ["application/json"])
-    fun fetch(@Valid @RequestBody request: GetTransactionRequest): GetTransactionResponse? {
-        return service.fetch(request)
+    fun fetch(@Valid @RequestBody request: GetTransactionRequest?): GetTransactionResponse? {
+        return service.fetch(request!!)
     }
 }

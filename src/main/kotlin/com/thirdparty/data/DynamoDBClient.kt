@@ -1,52 +1,48 @@
 package com.thirdparty.data
 
-import com.amazonaws.services.dynamodbv2.document.*
+import com.amazonaws.services.dynamodbv2.document.DynamoDB
+import com.amazonaws.services.dynamodbv2.document.Item
+import com.amazonaws.services.dynamodbv2.document.Table
 import com.amazonaws.services.dynamodbv2.document.spec.ScanSpec
-import org.springframework.beans.factory.annotation.Autowired
+import com.thirdparty.TABLE_NAME
 import org.springframework.stereotype.Component
 
-
 @Component
-class DynamoDBClient {
-    @Autowired
-    private lateinit var dynamoDB: DynamoDB
+class DynamoDBClient(private val dynamoDB: DynamoDB) {
 
-    fun create(items: Map<String, String>) {
-        val table: Table = dynamoDB.getTable(TABLE_NAME)
-
-        val dynamoDBItem = Item()
-
-        dynamoDBItem.withPrimaryKey(PrimaryKey(TRANSACTION_ID, items.getValue(TRANSACTION_ID)))
-
-        items
-            .filter { it.key != TRANSACTION_ID }
-            .forEach { item ->
-                dynamoDBItem.withString(item.key, item.value)
-            }
-
-        table.putItem(dynamoDBItem)
+    fun putItem(item: Item, table: String = TABLE_NAME) {
+        val table: Table = dynamoDB.getTable(table)
+        table.putItem(item)
     }
 
     fun fetch(items: Map<String, String>): List<Map<String, String>> {
-        val transactions: MutableList<Map<String, String>> = mutableListOf()
+        val itemMap: MutableList<Map<String, String>> = mutableListOf()
         try {
             val table: Table = dynamoDB.getTable(TABLE_NAME)
+            val filterExpression = items.map {
+                "#".plus(it.key).plus(" = ").plus(":").plus(it.key)
+            }.joinToString(separator = " and ")
 
-            val spec = ScanSpec().withNameMap(items)
+            val valueMap = items.mapKeys {
+                ":".plus(it.key)
+            }
+
+            val nameMap = items.map{
+                "#".plus(it.key) to it.key
+            }.toMap()
+
+            val spec = ScanSpec()
+                    .withFilterExpression(filterExpression)
+                    .withValueMap(valueMap)
+                    .withNameMap(nameMap)
 
             table.scan(spec).forEach { currentItem ->
-                transactions.add(currentItem.asMap() as Map<String, String>)
-                println(currentItem.toString())
+                itemMap.add(currentItem.asMap() as Map<String, String>)
             }
         } catch (e: Exception) {
             System.err.println(e.message)
         }
 
-        return transactions
-    }
-
-    companion object {
-        private const val TABLE_NAME = "hackathon-third-party"
-        private const val TRANSACTION_ID = "transactionId"
+        return itemMap
     }
 }

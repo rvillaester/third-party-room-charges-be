@@ -1,49 +1,40 @@
 package com.thirdparty.service
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.thirdparty.data.*
-import org.springframework.beans.factory.annotation.Autowired
+import com.thirdparty.toDDBItem
+import com.thirdparty.toMap
+import com.thirdparty.toTransactionResponse
 import org.springframework.stereotype.Service
+import java.time.LocalDate
+import java.time.LocalTime
 import java.util.*
 
 @Service
-class TransactionService {
-
-    @Autowired
-    private lateinit var dynamoDB: DynamoDBClient
-
-    private val objectMapper = jacksonObjectMapper()
+class TransactionService(private val dynamoDB: DynamoDBClient, private val objectMapper: ObjectMapper) {
 
     fun fetch(request: GetTransactionRequest): GetTransactionResponse {
-        val data = dynamoDB.fetch(convertToMap(request))
-        return convertToGetTransactionResponse(data)
+        var attributes: Map<String, String> = request.toMap(objectMapper);
+        attributes.plus(Pair("type", "transaction"))
+        val data: List<Map<String, String>> = dynamoDB.fetch(attributes)
+        return data.toTransactionResponse(objectMapper)
     }
 
     fun create(request: CreateTransactionRequest): CreateTransactionResponse {
-        val referenceNo: String = UUID.randomUUID().toString()
+        val transactionId: String = "T-".plus(UUID.randomUUID().toString())
         val transaction = Transaction(
-            request.detail,
-            request.amount,
-            request.receiptNumber,
-            request.customerNumber,
-            request.hotelId,
-            request.partnerId,
-            referenceNo
+                transactionId,
+                request.detail,
+                request.amount,
+                request.receiptNumber,
+                request.customerNumber,
+                request.hotelId,
+                request.partnerId,
+                LocalDate.now(),
+                LocalTime.now()
         )
-        dynamoDB.create(convertToMap(transaction))
-        return CreateTransactionResponse(referenceNo)
+        dynamoDB.putItem(transaction.toDDBItem(objectMapper))
+        return CreateTransactionResponse(transactionId)
     }
 
-    private fun <T> convertToMap(from: T): Map<String, String> {
-        return objectMapper.readValue(objectMapper.writeValueAsBytes(from),
-            object : TypeReference<Map<String, String>>() {})
-    }
-
-    private fun convertToGetTransactionResponse(from: List<Map<String, String>>): GetTransactionResponse {
-        val transactions: List<Transaction> = from.map {
-            objectMapper.readValue(objectMapper.writeValueAsBytes(it), object : TypeReference<Transaction>() {})
-        }
-        return GetTransactionResponse(transactions)
-    }
 }
