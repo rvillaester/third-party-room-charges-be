@@ -15,17 +15,25 @@ data class GetTransactionResponse(
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class GetTransactionRequest (
-    @NotBlank
     val date: LocalDate? = null,
-    @NotBlank
-    val customerNumber: String? = null
+    val customerNumber: String? = null,
+    val hotelId: String? = null,
+    val partnerId: String? = null
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class CreateTransactionRequest (
-    val detail: @NotBlank String?,
-    val amount: @NotBlank Double?,
+    @NotBlank
+    val detail: Map<String, Double>?,
+    @NotBlank
+    val amount: Double?,
+    @NotBlank
     val receiptNumber: String?,
-    val customerNumber: @NotBlank String?
+    @NotBlank
+    val customerNumber:  String?,
+    @NotBlank
+    val hotelId: String?,
+    @NotBlank
+    val partnerId: String?
 )
