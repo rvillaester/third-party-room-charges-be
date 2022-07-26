@@ -24,7 +24,7 @@ data class GetTransactionRequest (
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class CreateTransactionRequest (
     @NotBlank
-    val detail: Map<String, Double>?,
+    val detail: String?,
     @NotBlank
     val amount: Double?,
     @NotBlank
@@ -47,7 +47,7 @@ data class CreateTransactionResponse(
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class Transaction(
     @NotBlank
-    val detail: Map<String, Double>?,
+    val detail: String?,
     @NotBlank
     val amount: Double?,
     @NotBlank
