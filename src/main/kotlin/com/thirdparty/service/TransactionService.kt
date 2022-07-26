@@ -11,12 +11,12 @@ import java.util.*
 class TransactionService {
 
     @Autowired
-    private lateinit var dynamoDB: DynamoDB
+    private lateinit var dynamoDB: DynamoDBClient
 
     private val objectMapper = jacksonObjectMapper()
 
     fun fetch(request: GetTransactionRequest): GetTransactionResponse {
-        val data = dynamoDB.get(convertToMap(request))
+        val data = dynamoDB.fetch(convertToMap(request))
         return convertToGetTransactionResponse(data)
     }
 
@@ -31,7 +31,7 @@ class TransactionService {
             request.partnerId,
             referenceNo
         )
-        dynamoDB.save(convertToMap(transaction))
+        dynamoDB.create(convertToMap(transaction))
         return CreateTransactionResponse(referenceNo)
     }
 
