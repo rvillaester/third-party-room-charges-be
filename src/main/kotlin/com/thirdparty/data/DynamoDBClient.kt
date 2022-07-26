@@ -1,52 +1,51 @@
 package com.thirdparty.data
 
-import com.amazonaws.services.dynamodbv2.document.*
-import com.amazonaws.services.dynamodbv2.document.spec.ScanSpec
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression
+import com.amazonaws.services.dynamodbv2.document.DynamoDB
+import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 
 @Component
 class DynamoDBClient {
+
     @Autowired
-    private lateinit var dynamoDB: DynamoDB
+    private lateinit var dynamoDBMapper: DynamoDBMapper
 
-    fun create(items: Map<String, String>) {
-        val table: Table = dynamoDB.getTable(TABLE_NAME)
+    fun create(transaction: Transaction) {
+        val transactionItem = TransactionItem(transaction)
 
-        val dynamoDBItem = Item()
-
-        dynamoDBItem.withPrimaryKey(PrimaryKey(TRANSACTION_ID, items.getValue(TRANSACTION_ID)))
-
-        items
-            .filter { it.key != TRANSACTION_ID }
-            .forEach { item ->
-                dynamoDBItem.withString(item.key, item.value)
-            }
-
-        table.putItem(dynamoDBItem)
+        dynamoDBMapper.save(transactionItem)
     }
 
-    fun fetch(items: Map<String, String>): List<Map<String, String>> {
-        val transactions: MutableList<Map<String, String>> = mutableListOf()
-        try {
-            val table: Table = dynamoDB.getTable(TABLE_NAME)
+    fun fetch(transactionRequest: GetTransactionRequest): List<TransactionItem> {
 
-            val spec = ScanSpec().withNameMap(items)
+        val eav = HashMap<String, AttributeValue>()
+        val filterExpressions = mutableListOf<String>()
 
-            table.scan(spec).forEach { currentItem ->
-                transactions.add(currentItem.asMap() as Map<String, String>)
-                println(currentItem.toString())
-            }
-        } catch (e: Exception) {
-            System.err.println(e.message)
+        if (transactionRequest.customerNumber != null) {
+            eav[":customerNumber"] = AttributeValue().withS(transactionRequest.customerNumber)
+            filterExpressions.add("customerNumber = :customerNumber")
         }
 
-        return transactions
-    }
+        if (transactionRequest.hotelId != null) {
+            eav[":hotelId"] = AttributeValue().withS(transactionRequest.hotelId)
+            filterExpressions.add("hotelId = :hotelId")
+        }
 
-    companion object {
-        private const val TABLE_NAME = "hackathon-third-party"
-        private const val TRANSACTION_ID = "transactionId"
+        if (transactionRequest.partnerId != null) {
+            eav[":partnerId"] = AttributeValue().withS(transactionRequest.partnerId)
+            filterExpressions.add("partnerId = :partnerId")
+        }
+
+
+        val scanExpression = DynamoDBScanExpression()
+            .withFilterExpression(filterExpressions.joinToString(" and "))
+            .withExpressionAttributeValues(eav)
+
+        return dynamoDBMapper
+            .scan(TransactionItem::class.java, scanExpression)
     }
 }

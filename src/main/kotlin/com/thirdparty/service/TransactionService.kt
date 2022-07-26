@@ -16,8 +16,14 @@ class TransactionService {
     private val objectMapper = jacksonObjectMapper()
 
     fun fetch(request: GetTransactionRequest): GetTransactionResponse {
-        val data = dynamoDB.fetch(convertToMap(request))
-        return convertToGetTransactionResponse(data)
+        val data = dynamoDB.fetch(request)
+        val transactionList = mutableListOf<Transaction>()
+
+        data.forEach { item ->
+            transactionList.add(Transaction(item))
+        }
+
+        return GetTransactionResponse(transactionList)
     }
 
     fun create(request: CreateTransactionRequest): CreateTransactionResponse {
@@ -31,7 +37,7 @@ class TransactionService {
             request.partnerId,
             referenceNo
         )
-        dynamoDB.create(convertToMap(transaction))
+        dynamoDB.create(transaction)
         return CreateTransactionResponse(referenceNo)
     }
 
