@@ -1,5 +1,7 @@
 package com.thirdparty.data
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -26,4 +28,22 @@ data class Wallet(
         val lastName: String?,
         val date: LocalDate,
         val type: String = "wallet"
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class Hotel(
+        val PK: String, // this is the hotel id
+        val name: String?,
+        val partners: List<Partner>? = null,
+        val type: String = "hotel"
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class Partner(
+        val PK: String,
+        val name: String?,
+        val hotels: List<Hotel>? = null,
+        val type: String = "partner"
 )
