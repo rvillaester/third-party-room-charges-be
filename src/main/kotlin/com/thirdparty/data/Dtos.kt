@@ -105,7 +105,7 @@ data class GetHotelRequest(
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class GetHotelResponse(
-    val hotel: Hotel
+    val hotel: Hotel?
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -118,5 +118,5 @@ data class GetPartnerRequest(
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class GetPartnerResponse(
-    val partner: Partner
+    val partner: Partner?
 )

@@ -17,7 +17,7 @@ class HotelService(private val dynamoDB: DynamoDBClient, private val objectMappe
         val data: List<Map<String, String>> = dynamoDB.fetch(attributes)
         val hotels = data.toHotels(objectMapper)
 
-        return GetHotelResponse(hotels.first())
+        return GetHotelResponse(hotels.firstOrNull())
     }
 
 }

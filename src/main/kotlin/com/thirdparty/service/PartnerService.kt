@@ -16,7 +16,7 @@ class PartnerService(private val dynamoDBClient: DynamoDBClient, private val obj
         attributes += Pair("type", "partner")
         val data: List<Map<String, String>> = dynamoDBClient.fetch(attributes)
         val partners = data.toPartners(objectMapper)
-        return GetPartnerResponse(partners.first())
+        return GetPartnerResponse(partners.firstOrNull())
     }
 
 }
