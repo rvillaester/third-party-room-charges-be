@@ -2,6 +2,7 @@ package com.thirdparty.data
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import java.time.LocalDate
@@ -92,4 +93,30 @@ data class GetWalletRequest (
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class GetWalletResponse (
     val wallets: List<Wallet> = emptyList()
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class GetHotelRequest(
+    @JsonProperty("PK")
+    val hotelId: String
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class GetHotelResponse(
+    val hotel: Hotel
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class GetPartnerRequest(
+    @JsonProperty("PK")
+    val partnerId: String
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class GetPartnerResponse(
+    val partner: Partner
 )
