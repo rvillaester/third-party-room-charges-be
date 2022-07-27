@@ -78,3 +78,15 @@ data class LoginResponse(
         val hotelName: String? = null,
         val partnerName: String? = null
 )
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class GetWalletRequest (
+    val active: Boolean
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class GetWalletResponse (
+    val wallets: List<Wallet> = emptyList()
+)

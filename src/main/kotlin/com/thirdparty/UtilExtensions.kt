@@ -4,19 +4,16 @@ import com.amazonaws.services.dynamodbv2.document.Item
 import com.amazonaws.services.dynamodbv2.document.PrimaryKey
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.thirdparty.data.GetTransactionResponse
-import com.thirdparty.data.Transaction
 
 fun <T> T.toMap(objectMapper: ObjectMapper): Map<String, String> {
     return objectMapper.readValue(objectMapper.writeValueAsBytes(this),
             object : TypeReference<Map<String, String>>() {})
 }
 
-fun List<out Map<String, String>>.toTransactionResponse(objectMapper: ObjectMapper): GetTransactionResponse {
-    val transactions: List<Transaction> = this.map {
-        objectMapper.readValue(objectMapper.writeValueAsBytes(it), object : TypeReference<Transaction>() {})
+fun <T> List<out Map<String, String>>.toObjList(objectMapper: ObjectMapper): List<T> {
+    return this.map {
+        objectMapper.readValue(objectMapper.writeValueAsBytes(it), object : TypeReference<T>() {})
     }
-    return GetTransactionResponse(transactions)
 }
 
 fun <T> T.toDDBItem(objectMapper: ObjectMapper, key: String = "pk"): Item {

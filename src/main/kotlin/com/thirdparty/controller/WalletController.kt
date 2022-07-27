@@ -2,6 +2,8 @@ package com.thirdparty.controller
 
 import com.thirdparty.data.CreateWalletRequest
 import com.thirdparty.data.CreateWalletResponse
+import com.thirdparty.data.GetWalletRequest
+import com.thirdparty.data.GetWalletResponse
 import com.thirdparty.service.WalletService
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.PostMapping
@@ -16,5 +18,10 @@ class WalletController(private val service: WalletService) {
     @PostMapping("create")
     fun create(@Valid @RequestBody request: CreateWalletRequest?): CreateWalletResponse? {
         return service.create(request!!)
+    }
+
+    @PostMapping("fetch")
+    fun create(@Valid @RequestBody request: GetWalletRequest?): GetWalletResponse? {
+        return service.fetch(request!!)
     }
 }

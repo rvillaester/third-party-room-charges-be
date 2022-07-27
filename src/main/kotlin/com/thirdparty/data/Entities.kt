@@ -13,7 +13,8 @@ data class Transaction(
         val partnerId: String?,
         val date: LocalDate?,
         val time: LocalTime?,
-        val type: String = "transaction"
+        val type: String = "transaction",
+        val status: String = "pending"
 )
 
 data class Wallet(

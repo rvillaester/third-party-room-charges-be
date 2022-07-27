@@ -1,11 +1,9 @@
 package com.thirdparty.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.thirdparty.data.CreateWalletRequest
-import com.thirdparty.data.CreateWalletResponse
-import com.thirdparty.data.DynamoDBClient
-import com.thirdparty.data.Wallet
+import com.thirdparty.data.*
 import com.thirdparty.toDDBItem
+import com.thirdparty.toObjList
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.util.*
@@ -26,5 +24,15 @@ class WalletService(private val dynamoDB: DynamoDBClient, private val objectMapp
 
         dynamoDB.putItem(wallet.toDDBItem(objectMapper))
         return CreateWalletResponse(id)
+    }
+
+    fun fetch(request: GetWalletRequest): GetWalletResponse {
+        val operator = if(request.active) ">=" else "<"
+        val filterExpression = "#type = :type and #validTo $operator :validTo"
+        val nameMap = mapOf("#type" to "type", "#validTo" to "validTo")
+        val valueMap = mapOf(":type" to "wallet", ":validTo" to LocalDate.now().toString())
+        val data: List<Map<String, String>> = dynamoDB.fetch(filterExpression, nameMap, valueMap)
+        val wallets = data.toObjList<Wallet>(objectMapper)
+        return GetWalletResponse(wallets)
     }
 }

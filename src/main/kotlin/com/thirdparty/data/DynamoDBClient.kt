@@ -16,25 +16,29 @@ class DynamoDBClient(private val dynamoDB: DynamoDB) {
     }
 
     fun fetch(items: Map<String, String>): List<Map<String, String>> {
+        val filterExpression = items.map {
+            "#".plus(it.key).plus(" = ").plus(":").plus(it.key)
+        }.joinToString(separator = " and ")
+
+        val valueMap = items.mapKeys {
+            ":".plus(it.key)
+        }
+
+        val nameMap = items.map {
+            "#".plus(it.key) to it.key
+        }.toMap()
+
+        return fetch(filterExpression, nameMap, valueMap)
+    }
+
+    fun fetch(filterExpression: String, nameMap: Map<String, String>, valueMap: Map<String, String>, table: String = TABLE_NAME): List<Map<String, String>> {
         val itemMap: MutableList<Map<String, String>> = mutableListOf()
-        try {
-            val table: Table = dynamoDB.getTable(TABLE_NAME)
-            val filterExpression = items.map {
-                "#".plus(it.key).plus(" = ").plus(":").plus(it.key)
-            }.joinToString(separator = " and ")
-
-            val valueMap = items.mapKeys {
-                ":".plus(it.key)
-            }
-
-            val nameMap = items.map{
-                "#".plus(it.key) to it.key
-            }.toMap()
-
+        try{
+            val table: Table = dynamoDB.getTable(table)
             val spec = ScanSpec()
-                    .withFilterExpression(filterExpression)
-                    .withValueMap(valueMap)
-                    .withNameMap(nameMap)
+                .withFilterExpression(filterExpression)
+                .withValueMap(valueMap)
+                .withNameMap(nameMap)
 
             table.scan(spec).forEach { currentItem ->
                 itemMap.add(currentItem.asMap() as Map<String, String>)
@@ -45,4 +49,5 @@ class DynamoDBClient(private val dynamoDB: DynamoDB) {
 
         return itemMap
     }
+
 }
