@@ -30,16 +30,20 @@ data class Wallet(
         val type: String = "wallet"
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class Hotel(
         val PK: String, // this is the hotel id
         val name: String?,
-        val partners: List<Map<String, String>>?,
+        val partners: List<Partner>? = null,
         val type: String = "hotel"
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class Partner(
         val PK: String,
         val name: String?,
-        val hotels: List<Map<String, String>>?,
+        val hotels: List<Hotel>? = null,
         val type: String = "partner"
 )
