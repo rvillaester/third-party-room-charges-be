@@ -4,7 +4,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 data class Transaction(
-        val pk: String, // this is the transaction ID
+        val PK: String, // this is the transaction ID
         val detail: String?,
         val amount: Double?,
         val receiptNumber: String?,
@@ -18,7 +18,7 @@ data class Transaction(
 )
 
 data class Wallet(
-        val pk: String, // this is the wallet id
+        val PK: String, // this is the wallet id
         val roomNumber: String,
         val validTo: LocalDate,
         val firstName: String?,

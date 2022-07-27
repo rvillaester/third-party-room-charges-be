@@ -26,6 +26,30 @@ functions:
           path: transaction/fetch
           method: post
           cors: true
+  createWallet:
+    handler: com.thirdparty.LambdaHandler::handleRequest
+    role: LambdaRole
+    events:
+      - http:
+          path: wallet/create
+          method: post
+          cors: true
+  searchWallets:
+    handler: com.thirdparty.LambdaHandler::handleRequest
+    role: LambdaRole
+    events:
+      - http:
+          path: wallet/fetch
+          method: post
+          cors: true
+  login:
+    handler: com.thirdparty.LambdaHandler::handleRequest
+    role: LambdaRole
+    events:
+      - http:
+          path: auth/login
+          method: post
+          cors: true
 
 resources:
   Resources:

@@ -3,7 +3,7 @@ package com.thirdparty.service
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.thirdparty.data.*
 import com.thirdparty.toDDBItem
-import com.thirdparty.toObjList
+import com.thirdparty.toWallets
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.util.*
@@ -32,7 +32,7 @@ class WalletService(private val dynamoDB: DynamoDBClient, private val objectMapp
         val nameMap = mapOf("#type" to "type", "#validTo" to "validTo")
         val valueMap = mapOf(":type" to "wallet", ":validTo" to LocalDate.now().toString())
         val data: List<Map<String, String>> = dynamoDB.fetch(filterExpression, nameMap, valueMap)
-        val wallets = data.toObjList<Wallet>(objectMapper)
+        val wallets = data.toWallets(objectMapper)
         return GetWalletResponse(wallets)
     }
 }
