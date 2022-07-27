@@ -42,6 +42,22 @@ functions:
           path: wallet/fetch
           method: post
           cors: true
+  getHotel:
+    handler: com.thirdparty.LambdaHandler::handleRequest
+    role: LambdaRole
+    events:
+      - http:
+          path: hotel/{id}
+          method: get
+          cors: true
+  getPartner:
+    handler: com.thirdparty.LambdaHandler::handleRequest
+    role: LambdaRole
+    events:
+      - http:
+          path: partner/{id}
+          method: get
+          cors: true
   login:
     handler: com.thirdparty.LambdaHandler::handleRequest
     role: LambdaRole
