@@ -15,6 +15,7 @@ class WalletService(private val dynamoDB: DynamoDBClient, private val objectMapp
         val id: String = "W-".plus(UUID.randomUUID().toString())
         val wallet = Wallet(
                 id,
+                request.hotelId!!,
                 request.roomNumber!!,
                 request.validTo!!,
                 request.firstname,

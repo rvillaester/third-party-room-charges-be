@@ -19,6 +19,7 @@ data class Transaction(
 
 data class Wallet(
         val PK: String, // this is the wallet id
+        val hotelId: String,
         val roomNumber: String,
         val validTo: LocalDate,
         val firstName: String?,

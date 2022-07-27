@@ -52,6 +52,8 @@ data class CreateWalletRequest(
         @NotNull
         val validTo: LocalDate?,
         @NotNull
+        val hotelId: String?,
+        @NotNull
         val roomNumber: String?
 )
 
@@ -82,6 +84,7 @@ data class LoginResponse(
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class GetWalletRequest (
+    val hotelId: String,
     val active: Boolean
 )
 
