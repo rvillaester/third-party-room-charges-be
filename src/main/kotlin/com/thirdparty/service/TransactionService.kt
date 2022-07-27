@@ -28,7 +28,7 @@ class TransactionService(private val dynamoDB: DynamoDBClient, private val objec
                 request.detail,
                 request.amount,
                 request.receiptNumber,
-                request.customerNumber,
+                request.walletId,
                 request.hotelId,
                 request.partnerId,
                 LocalDate.now(),

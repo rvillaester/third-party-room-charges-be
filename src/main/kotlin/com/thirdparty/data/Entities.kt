@@ -8,7 +8,7 @@ data class Transaction(
         val detail: String?,
         val amount: Double?,
         val receiptNumber: String?,
-        val customerNumber:  String?,
+        val walletId:  String?,
         val hotelId: String?,
         val partnerId: String?,
         val date: LocalDate?,

@@ -16,7 +16,7 @@ data class GetTransactionResponse(
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class GetTransactionRequest (
     val date: LocalDate? = null,
-    val customerNumber: String? = null,
+    val walletId: String? = null,
     val hotelId: String? = null,
     val partnerId: String? = null
 )
@@ -31,7 +31,7 @@ data class CreateTransactionRequest (
     @NotBlank
     val receiptNumber: String?,
     @NotBlank
-    val customerNumber:  String?,
+    val walletId:  String?,
     @NotBlank
     val hotelId: String?,
     @NotBlank
