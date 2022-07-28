@@ -48,14 +48,14 @@ data class CreateTransactionResponse(
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class CreateWalletRequest(
-        val firstname: String?,
-        val lastname: String?,
-        @NotNull
-        val validTo: LocalDate?,
-        @NotNull
-        val hotelId: String?,
-        @NotNull
-        val roomNumber: String?
+    val firstName: String?,
+    val lastName: String?,
+    @NotNull
+    val validTo: LocalDate?,
+    @NotNull
+    val hotelId: String?,
+    @NotNull
+    val roomNumber: String?
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
