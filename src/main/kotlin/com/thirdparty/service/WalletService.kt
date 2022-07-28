@@ -12,6 +12,7 @@ import java.util.*
 class WalletService(private val dynamoDB: DynamoDBClient, private val objectMapper: ObjectMapper) {
 
     fun create(request: CreateWalletRequest): CreateWalletResponse {
+        println("Payload: $request")
         val id: String = "W-".plus(UUID.randomUUID().toString())
         val wallet = Wallet(
                 id,
@@ -28,10 +29,11 @@ class WalletService(private val dynamoDB: DynamoDBClient, private val objectMapp
     }
 
     fun fetch(request: GetWalletRequest): GetWalletResponse {
+        println("Payload: $request")
         val operator = if(request.active) ">=" else "<"
-        val filterExpression = "#type = :type and #validTo $operator :validTo"
-        val nameMap = mapOf("#type" to "type", "#validTo" to "validTo")
-        val valueMap = mapOf(":type" to "wallet", ":validTo" to LocalDate.now().toString())
+        val filterExpression = "#type = :type and #validTo $operator :validTo and #hotelId = :hotelId"
+        val nameMap = mapOf("#type" to "type", "#validTo" to "validTo", "#hotelId" to "hotelId")
+        val valueMap = mapOf(":type" to "wallet", ":validTo" to LocalDate.now().toString(), ":hotelId" to request.hotelId)
         val data: List<Map<String, String>> = dynamoDB.fetch(filterExpression, nameMap, valueMap)
         val wallets = data.toWallets(objectMapper)
         return GetWalletResponse(wallets)

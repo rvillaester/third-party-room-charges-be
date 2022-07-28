@@ -14,6 +14,7 @@ import java.util.*
 class TransactionService(private val dynamoDB: DynamoDBClient, private val objectMapper: ObjectMapper) {
 
     fun fetch(request: GetTransactionRequest): GetTransactionResponse {
+        println("Payload: $request")
         var attributes: Map<String, String> = request.toMap(objectMapper);
         attributes += Pair("type", "transaction")
         val data: List<Map<String, String>> = dynamoDB.fetch(attributes)
@@ -22,6 +23,7 @@ class TransactionService(private val dynamoDB: DynamoDBClient, private val objec
     }
 
     fun create(request: CreateTransactionRequest): CreateTransactionResponse {
+        println("Payload: $request")
         val transactionId: String = "T-".plus(UUID.randomUUID().toString())
         val transaction = Transaction(
                 transactionId,

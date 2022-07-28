@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 class AuthService(private val ddbClient: DynamoDBClient) {
 
     fun login(request: LoginRequest): LoginResponse? {
-        println("Received login request: $request")
+        println("Payload: $request")
         val attributeMap = mapOf("username" to request.username!!, "password" to request.password!!, "type" to "user")
 
         val results: List<Map<String, String>> = ddbClient.fetch(attributeMap)

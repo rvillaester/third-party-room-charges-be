@@ -47,7 +47,7 @@ functions:
     role: LambdaRole
     events:
       - http:
-          path: hotel/{id}
+          path: hotel/{hotelId}
           method: get
           cors: true
   getPartner:
@@ -55,7 +55,7 @@ functions:
     role: LambdaRole
     events:
       - http:
-          path: partner/{id}
+          path: partner/{partnerId}
           method: get
           cors: true
   login:
