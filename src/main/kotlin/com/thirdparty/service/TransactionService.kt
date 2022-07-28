@@ -19,7 +19,7 @@ class TransactionService(private val dynamoDB: DynamoDBClient, private val objec
         attributes += Pair("type", "transaction")
         val data: List<Map<String, String>> = dynamoDB.fetch(attributes)
         val transactions = data.toTransactions(objectMapper)
-        return GetTransactionResponse(transactions)
+        return GetTransactionResponse(transactions.sortedBy { it.date })
     }
 
     fun create(request: CreateTransactionRequest): CreateTransactionResponse {

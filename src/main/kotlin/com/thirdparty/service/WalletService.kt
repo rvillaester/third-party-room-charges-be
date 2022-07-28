@@ -36,6 +36,6 @@ class WalletService(private val dynamoDB: DynamoDBClient, private val objectMapp
         val valueMap = mapOf(":type" to "wallet", ":validTo" to LocalDate.now().toString(), ":hotelId" to request.hotelId)
         val data: List<Map<String, String>> = dynamoDB.fetch(filterExpression, nameMap, valueMap)
         val wallets = data.toWallets(objectMapper)
-        return GetWalletResponse(wallets)
+        return GetWalletResponse(wallets.sortedBy { it.date })
     }
 }
