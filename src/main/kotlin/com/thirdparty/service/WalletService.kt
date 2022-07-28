@@ -18,8 +18,8 @@ class WalletService(private val dynamoDB: DynamoDBClient, private val objectMapp
                 request.hotelId!!,
                 request.roomNumber!!,
                 request.validTo!!,
-                request.firstname,
-                request.lastname,
+                request.firstName,
+                request.lastName,
                 LocalDate.now()
         )
 
