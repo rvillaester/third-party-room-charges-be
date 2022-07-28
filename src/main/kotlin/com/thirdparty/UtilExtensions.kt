@@ -25,10 +25,6 @@ fun List<out Map<String, String>>.toHotels(objectMapper: ObjectMapper): List<Hot
     }
 }
 
-fun Map<String, String>.toHotel(objectMapper: ObjectMapper): Hotel {
-    return objectMapper.readValue(objectMapper.writeValueAsBytes(this), object : TypeReference<Hotel>() {})
-}
-
 fun List<out Map<String, String>>.toPartners(objectMapper: ObjectMapper): List<Partner> {
     return this.map {
         objectMapper.readValue(objectMapper.writeValueAsBytes(it), object : TypeReference<Partner>() {})
