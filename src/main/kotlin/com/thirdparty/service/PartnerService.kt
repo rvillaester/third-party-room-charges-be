@@ -3,7 +3,8 @@ package com.thirdparty.service
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.thirdparty.data.DynamoDBClient
 import com.thirdparty.data.GetPartnerResponse
-import com.thirdparty.toPartners
+import com.thirdparty.data.Partner
+import com.thirdparty.toObjList
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,7 +17,7 @@ class PartnerService(private val dynamoDBClient: DynamoDBClient, private val obj
         )
         
         val data: List<Map<String, String>> = dynamoDBClient.fetch(attributes)
-        val partners = data.toPartners(objectMapper)
+        val partners = data.toObjList<Partner>(objectMapper)
         return GetPartnerResponse(partners.firstOrNull())
     }
 

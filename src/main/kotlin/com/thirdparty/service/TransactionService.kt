@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.thirdparty.data.*
 import com.thirdparty.toDDBItem
 import com.thirdparty.toMap
-import com.thirdparty.toTransactions
+import com.thirdparty.toObjList
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalTime
@@ -18,8 +18,8 @@ class TransactionService(private val dynamoDB: DynamoDBClient, private val objec
         var attributes: Map<String, String> = request.toMap(objectMapper);
         attributes += Pair("type", "transaction")
         val data: List<Map<String, String>> = dynamoDB.fetch(attributes)
-        val transactions = data.toTransactions(objectMapper)
-        return GetTransactionResponse(transactions.sortedBy { it.date })
+        val transactions = data.toObjList<Transaction>(objectMapper)
+        return GetTransactionResponse(transactions.sortedBy { "" + it.date + it.time })
     }
 
     fun create(request: CreateTransactionRequest): CreateTransactionResponse {
